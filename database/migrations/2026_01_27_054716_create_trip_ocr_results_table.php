@@ -13,17 +13,20 @@ return new class extends Migration {
         Schema::create('trip_ocr_results', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('trip_id')
-                ->constrained('trips')
+            $table->unsignedBigInteger('trip_id');
+
+            $table->foreign('trip_id')
+                ->references('id')
+                ->on('trips')
                 ->cascadeOnDelete();
 
             $table->string('plate')->nullable();
             $table->float('confidence')->default(0);
 
             $table->string('engine')->default('paddleocr');
-            $table->string('status'); // accepted | low_confidence | failed
+            $table->string('status');
 
-            $table->json('raw_result')->nullable(); // full OCR payload
+            $table->json('raw_result')->nullable();
             $table->timestamp('processed_at');
 
             $table->auditable();
